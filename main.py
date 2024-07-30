@@ -1,10 +1,18 @@
 import xml.etree.ElementTree as ET
 import importlib
+import os, glob
 
 def convert_talend_to_python(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    output_code = ""
+    output_code = """from snowflake.snowpark import Session
+import json
+import os
+import logging
+
+def main(session: Session):
+
+"""
     for component in root.findall('.//node'):
         component_name = component.get('componentName')
         if component_name:
@@ -26,9 +34,20 @@ if __name__ == "__main__":
     parser.add_argument('--output', required=True, help='output file')
     
     args = parser.parse_args()
-
-    xml_file = args.input
-    output_code = convert_talend_to_python(xml_file)
-    with open(args.output, 'w') as f:
-        f.write(output_code)
+    if os.path.isdir(args.input):
+        files = glob.glob(args.input + "/**/*.item",recursive=True)
+    else:
+        files = [args.input]
+    print(f"Processing {len(files)} files")
+    for xml_file in files:
+        print(f"Processing file {xml_file}...")
+        output_code = convert_talend_to_python(xml_file)
+        if os.path.isdir(args.output):
+            filename, ext = os.path.splitext(os.path.basename(xml_file))
+            filename = os.path.join(args.output, filename + ".py")
+        else:
+            filename = args.output
+        with open(filename, 'w') as f:
+            f.write(output_code)
+    print("Done")
 

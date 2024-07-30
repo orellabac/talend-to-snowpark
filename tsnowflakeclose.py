@@ -9,6 +9,6 @@ def convert(node):
             props = json.loads(child.attrib['value'])
     component_name = node.attrib.get("componentName")
 
-    return f"""# {component_id}
-session.close()
+    return f"""    # {component_id}
+    session.close()
 """

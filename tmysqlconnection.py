@@ -14,5 +14,5 @@ def convert(node):
             connection = child.attrib['value']
     component_name = node.attrib.get("componentName")
     common.components[component_id] = node
-    return f"""# MySQL connection {component_id}
+    return f"""    # MySQL connection {component_id}
 """

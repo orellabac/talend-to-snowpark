@@ -8,4 +8,5 @@ def convert(node):
             component_id = child.attrib['value']
     component_name = node.attrib.get("componentName")
 
-    return ""
+    return f"""    # PRE JOB {component_id}
+"""

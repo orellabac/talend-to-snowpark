@@ -11,9 +11,9 @@ def convert(node):
     component_name = node.attrib.get("componentName")
     query = props.get("query")
     if query is not None:
-        query = query["storedValue"][1:-1]
-    return f"""# Snowflake Input {component_id}
-{component_id} = session.sql('''
+        query = query["storedValue"][1:-1].strip()
+    return f"""    # Snowflake Input {component_id}
+    {component_id} = session.sql(\"\"\"
 {query}
-''')
+\"\"\")
 """ 

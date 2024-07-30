@@ -10,7 +10,6 @@ def convert(node):
             props = json.loads(child.attrib['value'])
     component_name = node.attrib.get("componentName")
 
-    return f"""# {component_id}
-from snowflake.snowpark import Session
-session = Session.builder.app_name("").getOrCreate()
+    return f"""    # Snowflake Connection {component_id}
+    session = Session.builder.app_name("").getOrCreate()
 """

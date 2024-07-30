@@ -11,7 +11,7 @@ def convert(node):
             query = child.attrib['value'][1:-1]
     component_name = node.attrib.get("componentName")
 
-    return f""" # MYSQL query {component_id}
-session.read.format("jdbc").jdbc("mysql", "jdbc:mysql://host:port/database", "user", "password", 
-'''{query}''')
+    return f"""    # MySQL query 
+    session.read.format("jdbc").jdbc("mysql", "jdbc:mysql://host:port/database", "user", "password", 
+\"\"\"{query}\"\"\")
 """

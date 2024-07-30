@@ -10,6 +10,6 @@ def convert(node):
             process = child.attrib['value']
     component_name = node.attrib.get("componentName")
 
-    return f"""# {component_id} 
-{process}()
+    return f"""    # RUN JOB {component_id} 
+    session.call("{process}")
 """

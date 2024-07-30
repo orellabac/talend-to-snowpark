@@ -9,4 +9,4 @@ def convert(node):
             props = json.loads(child.attrib['value'])
     component_name = node.attrib.get("componentName")
 
-    return ""
+    return f"    # MySQL close {component_id}"
