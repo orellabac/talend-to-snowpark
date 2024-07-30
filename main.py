@@ -2,6 +2,24 @@ import xml.etree.ElementTree as ET
 import importlib
 import os, glob
 
+
+
+def generate_project_file(project_items):
+    project = """definition_version: "1.1"
+snowpark:
+  project_name: "sample_snowpark_project"
+  stage_name: "mystage"
+  src: "app/"
+  procedures:
+"""
+    for name, path in project_items:
+        project += f"""    - name: {name}
+      handler: "{name}.main"
+      signature: ""
+      returns: string
+"""
+    return project
+
 def convert_talend_to_python(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -39,15 +57,25 @@ if __name__ == "__main__":
     else:
         files = [args.input]
     print(f"Processing {len(files)} files")
+    project_items = []
+    is_dir = False
     for xml_file in files:
         print(f"Processing file {xml_file}...")
         output_code = convert_talend_to_python(xml_file)
         if os.path.isdir(args.output):
             filename, ext = os.path.splitext(os.path.basename(xml_file))
-            filename = os.path.join(args.output, filename + ".py")
+            only_filename = filename
+            filename = os.path.join(args.output, filename.lower().replace(".","_") + ".py")
+            project_items.append((only_filename.lower().replace(".","_"), filename))
+            is_dir = True
         else:
             filename = args.output
         with open(filename, 'w') as f:
             f.write(output_code)
+    if is_dir:
+        print("Generating project file...")
+        solution = generate_project_file(project_items)
+        with open(os.path.join(args.output, "snowflake.yml"), 'w') as f:
+            f.write(solution)
     print("Done")
 
